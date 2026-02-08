@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+/* In Tailwind v4, you define theme customizations 
+  directly in CSS using the @theme block.
+  This automatically generates the 'font-cairo' utility.
+*/
+@theme {
+  --font-cairo: "Cairo", sans-serif;
+}
+
+@layer base {
+  body {
+    /* Now we can use the font-cairo utility generated above */
+    @apply bg-slate-50 text-slate-900 font-cairo antialiased;
+    
+    background-image: radial-gradient(#dcf8c6 2px, transparent 2px);
+    background-size: 30px 30px;
+  }
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-emerald-200 rounded-full hover:bg-emerald-300 transition-colors;
+}
