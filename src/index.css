@@ -12,6 +12,8 @@
   body {
     /* Now we can use the font-cairo utility generated above */
     @apply bg-slate-50 text-slate-900 font-cairo antialiased;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
     
     background-image: radial-gradient(#dcf8c6 2px, transparent 2px);
     background-size: 30px 30px;

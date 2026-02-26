@@ -133,7 +133,7 @@ export default function CsvEditor({
                                         <td key={`${rIndex}-${col}`} className="p-2 border-l border-transparent hover:border-slate-200">
                                             <input
                                                 type="text"
-                                                className="w-full bg-transparent outline-none text-sm text-slate-700 placeholder-slate-300"
+                                                className="w-full bg-transparent outline-none text-base md:text-sm text-slate-700 placeholder-slate-300"
                                                 value={row[col] || ''}
                                                 onChange={(e) => updateCell(rIndex, col, e.target.value)}
                                                 placeholder="..."

@@ -242,7 +242,7 @@ export default function Sender({ data, columns, setData }) {
                         ref={textAreaRef}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        className="flex-1 w-full p-4 bg-white border-2 border-slate-200 rounded-xl resize-none outline-none focus:border-emerald-400 focus:bg-white transition-all font-medium text-slate-800 leading-relaxed text-[15px]"
+                        className="flex-1 w-full p-4 bg-white border-2 border-slate-200 rounded-xl resize-none outline-none focus:border-emerald-400 focus:bg-white transition-all font-medium text-slate-800 leading-relaxed text-base md:text-[15px]"
                         placeholder="اكتب رسالتك هنا... استخدم {name} أو أي متغير آخر"
                         style={{
                             caretColor: '#10b981',

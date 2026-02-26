@@ -38,7 +38,7 @@ export const Card = ({ children, className }) => (
 export const Input = ({ className, ...props }) => (
     <input
         className={cn(
-            'w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-sm',
+            'w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all text-base md:text-sm',
             className
         )}
         {...props}
