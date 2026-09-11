@@ -158,25 +158,43 @@ function App() {
     });
   };
 
+  // Expose the sticky header's height as --header-h so in-panel sticky
+  // toolbars can stick just below it instead of sliding underneath.
+  const headerRef = useRef(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const update = () =>
+      document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div dir="rtl" className="min-h-screen pb-10">
-      {/* Header */}
-      <div className="bg-emerald-600 text-white p-6 pb-20 rounded-b-[2.5rem] shadow-emerald-200/50 shadow-xl mb-2 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle,white_1.5px,transparent_1.5px)] bg-[size:20px_20px]" />
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-          <h1 className="text-3xl font-extrabold tracking-tight">WA Sender</h1>
-          <button
-            onClick={() => setShowPrivacy(true)}
-            className="mt-2 text-emerald-100 hover:text-white text-xs flex items-center gap-1 mx-auto opacity-70 hover:opacity-100 transition-opacity"
-          >
-            <Shield className="w-3 h-3" /> سياسة الخصوصية
-          </button>
+      {/* Sticky header + tabs */}
+      <div
+        ref={headerRef}
+        className="sticky top-0 z-30 bg-slate-50 bg-[radial-gradient(#dcf8c6_2px,transparent_2px)] bg-[size:30px_30px] pb-3"
+      >
+        <div className="bg-emerald-600 text-white p-6 pb-20 rounded-b-[2.5rem] shadow-emerald-200/50 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle,white_1.5px,transparent_1.5px)] bg-[size:20px_20px]" />
+          <div className="max-w-7xl mx-auto text-center relative z-10">
+            <h1 className="text-3xl font-extrabold tracking-tight">WA Sender</h1>
+            <button
+              onClick={() => setShowPrivacy(true)}
+              className="mt-2 text-emerald-100 hover:text-white text-xs flex items-center gap-1 mx-auto opacity-70 hover:opacity-100 transition-opacity"
+            >
+              <Shield className="w-3 h-3" /> سياسة الخصوصية
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-16 relative z-20">
         {/* Tabs */}
-        <div className="bg-white p-1.5 rounded-2xl shadow-lg border border-slate-100 flex gap-1 mb-6 max-w-xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4 -mt-16 relative">
+          <div className="bg-white p-1.5 rounded-2xl shadow-lg border border-slate-100 flex gap-1 max-w-xl mx-auto">
           {[
             { key: 'editor',   label: 'محرر البيانات', icon: <Database className="w-4 h-4" /> },
             { key: 'contacts', label: 'جهات الاتصال',  icon: <BookUser  className="w-4 h-4" /> },
@@ -193,9 +211,12 @@ function App() {
               {tab.icon}{tab.label}
             </button>
           ))}
+          </div>
         </div>
+      </div>
 
-        {/* Panels — always mounted */}
+      {/* Panels — always mounted */}
+      <div className="max-w-7xl mx-auto px-4 pt-3 relative z-20">
         <div>
           <div className={activeTab === 'editor' ? '' : 'hidden'}>
             <CsvEditor

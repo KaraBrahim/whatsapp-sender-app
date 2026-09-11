@@ -5,16 +5,37 @@ import { cn } from '../lib/utils';
 
 const DEFAULT_MESSAGE = `السلام عليكم {الاسم} 🌹`;
 const MESSAGE_KEY = 'wa_sender_message';
+const DIR_KEY = 'wa_sender_message_dir';
 const NAME_COL = 'الاسم';
 const PHONE_COL = 'الرقم';
+
+// Text direction of the message editor. 'auto' follows the first strong
+// character typed; the page is RTL so Latin text needs LTR to edit sanely.
+const DIR_OPTIONS = [
+    { value: 'auto', label: 'تلقائي' },
+    { value: 'rtl',  label: 'عربي' },
+    { value: 'ltr',  label: 'Latin' },
+];
 
 function loadMessage() {
     try { return localStorage.getItem(MESSAGE_KEY) || DEFAULT_MESSAGE; } catch { return DEFAULT_MESSAGE; }
 }
 
+function loadDir() {
+    try {
+        const d = localStorage.getItem(DIR_KEY);
+        return DIR_OPTIONS.some(o => o.value === d) ? d : 'auto';
+    } catch { return 'auto'; }
+}
+
 export default function Sender({ data, columns, setData }) {
     const [message, setMessage] = useState(() => loadMessage());
+    const [msgDir, setMsgDir] = useState(() => loadDir());
     const textAreaRef = useRef(null);
+
+    useEffect(() => {
+        try { localStorage.setItem(DIR_KEY, msgDir); } catch { /* storage unavailable */ }
+    }, [msgDir]);
 
     // Persist message on every change (debounced)
     const saveTimer = useRef(null);
@@ -112,14 +133,35 @@ export default function Sender({ data, columns, setData }) {
 
             {/* Message Editor Card */}
             <Card className="p-4 bg-white shadow">
-                <h3 className="text-xs font-bold text-emerald-700 uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4" />
-                    نص الرسالة
-                </h3>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                    <h3 className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-2">
+                        <MessageSquare className="w-4 h-4" />
+                        نص الرسالة
+                    </h3>
+                    {/* Direction toggle */}
+                    <div className="flex bg-slate-100 rounded-lg p-0.5 gap-0.5" role="radiogroup" aria-label="اتجاه النص">
+                        {DIR_OPTIONS.map(opt => (
+                            <button
+                                key={opt.value}
+                                type="button"
+                                role="radio"
+                                aria-checked={msgDir === opt.value}
+                                onClick={() => setMsgDir(opt.value)}
+                                className={cn(
+                                    'px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors',
+                                    msgDir === opt.value ? 'bg-white text-emerald-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                                )}
+                            >
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
                 <textarea
                     ref={textAreaRef}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
+                    dir={msgDir}
                     rows={5}
                     className="w-full p-4 bg-white border-2 border-slate-200 rounded-xl resize-none outline-none focus:border-emerald-400 transition-all font-medium text-slate-800 leading-relaxed text-base"
                     placeholder="اكتب رسالتك هنا... استخدم {الاسم} أو أي متغير آخر"

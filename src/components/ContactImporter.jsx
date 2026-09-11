@@ -165,6 +165,7 @@ export default function ContactImporter({ onAddToList }) {
                     type="text"
                     value={manualName}
                     onChange={(e) => setManualName(e.target.value)}
+                    dir="auto"
                     placeholder="الاسم (اختياري)"
                     className="w-full px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:border-emerald-400 outline-none text-sm font-medium transition-colors bg-white"
                 />
@@ -247,7 +248,7 @@ export default function ContactImporter({ onAddToList }) {
             {ManualCard}
 
             {/* Toolbar */}
-            <Card className="p-4 flex flex-wrap gap-3 items-center justify-between sticky top-4 z-20">
+            <Card className="p-4 flex flex-wrap gap-3 items-center justify-between sticky z-20" style={{ top: 'calc(var(--header-h, 0px) + 0.25rem)' }}>
                 <div className="flex items-center gap-3 flex-wrap">
                     <Button variant="secondary" onClick={loadContacts} disabled={isLoading}>
                         {isLoading

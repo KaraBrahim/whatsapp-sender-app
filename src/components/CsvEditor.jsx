@@ -63,7 +63,7 @@ export default function CsvEditor({
     return (
         <div className="space-y-4">
             {/* Toolbar */}
-            <Card className="p-4 flex flex-wrap gap-3 items-center justify-between sticky top-4 z-20">
+            <Card className="p-4 flex flex-wrap gap-3 items-center justify-between sticky z-20" style={{ top: 'calc(var(--header-h, 0px) + 0.25rem)' }}>
                 <div className="flex gap-2">
                     <Button onClick={onAddColumn} variant="secondary">
                         <Plus className="w-4 h-4" /> متغير جديد

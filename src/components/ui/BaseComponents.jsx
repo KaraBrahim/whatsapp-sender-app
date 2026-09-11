@@ -23,8 +23,8 @@ export const Button = ({ children, variant = 'primary', className, ...props }) =
     );
 };
 
-export const Card = ({ children, className }) => (
-    <div className={cn('bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40', className)}>
+export const Card = ({ children, className, ...props }) => (
+    <div className={cn('bg-white rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/40', className)} {...props}>
         {children}
     </div>
 );
