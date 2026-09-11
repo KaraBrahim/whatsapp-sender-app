@@ -4,7 +4,8 @@ import CsvEditor from './components/CsvEditor';
 import Sender from './components/Sender';
 import ContactImporter from './components/ContactImporter';
 import PrivacyPolicy from './components/PrivacyPolicy';
-import { Button, cn } from './components/ui/BaseComponents';
+import { Button } from './components/ui/BaseComponents';
+import { cn, newId } from './lib/utils';
 
 // ── localStorage helpers ──────────────────────────────────────────────────
 const STORAGE_KEY = 'wa_sender_data';
@@ -15,6 +16,8 @@ function loadFromStorage() {
     if (!raw) return { data: [], columns: ['الاسم', 'الرقم'] };
     const parsed = JSON.parse(raw);
     if (!parsed.columns || parsed.columns.length === 0) parsed.columns = ['الاسم', 'الرقم'];
+    // Migrate rows saved before ids existed
+    parsed.data = (parsed.data || []).map(row => (row.id ? row : { ...row, id: newId() }));
     return parsed;
   } catch {
     return { data: [], columns: ['الاسم', 'الرقم'] };
@@ -24,7 +27,7 @@ function loadFromStorage() {
 function saveToStorage(data, columns) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, columns }));
-  } catch {}
+  } catch { /* storage unavailable */ }
 }
 
 // ── Uncontrolled text input modal ─────────────────────────────────────────
@@ -141,6 +144,7 @@ function App() {
       const row = currentCols.reduce((acc, col) => ({ ...acc, [col]: '' }), {});
       row[nameKey] = c.name;
       row[phoneKey] = c.phone;
+      row.id = newId();
       row.sent = false;
       return row;
     });
@@ -158,7 +162,7 @@ function App() {
     <div dir="rtl" className="min-h-screen pb-10">
       {/* Header */}
       <div className="bg-emerald-600 text-white p-6 pb-20 rounded-b-[2.5rem] shadow-emerald-200/50 shadow-xl mb-2 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+        <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[radial-gradient(circle,white_1.5px,transparent_1.5px)] bg-[size:20px_20px]" />
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <h1 className="text-3xl font-extrabold tracking-tight">WA Sender</h1>
           <button

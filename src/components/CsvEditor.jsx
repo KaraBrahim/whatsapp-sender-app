@@ -37,22 +37,21 @@ export default function CsvEditor({
     onRenameColumn,
     onDeleteColumn,
 }) {
-    const commitCell = (rowIndex, column, value) => {
+    const commitCell = (rowId, column, value) => {
         setData(prev =>
-            prev.map((row, i) => (i === rowIndex ? { ...row, [column]: value } : row))
+            prev.map(row => (row.id === rowId ? { ...row, [column]: value } : row))
         );
     };
 
-    const deleteRow = (index) => {
-        setData(prev => prev.filter((_, i) => i !== index));
+    const deleteRow = (rowId) => {
+        setData(prev => prev.filter(row => row.id !== rowId));
     };
 
     const exportCSV = () => {
-        const dataToExport = data.map(row => {
-            const r = { ...row };
-            delete r.sent;
-            return r;
-        });
+        // Export only user-visible columns, in column order
+        const dataToExport = data.map(row =>
+            Object.fromEntries(columns.map(col => [col, row[col] ?? '']))
+        );
         const csv = Papa.unparse(dataToExport);
         const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
@@ -60,12 +59,6 @@ export default function CsvEditor({
         link.download = 'contacts.csv';
         link.click();
     };
-
-    if (columns.length === 0) {
-        setColumns(['الاسم', 'الرقم']);
-        setData([]);
-        return null;
-    }
 
     return (
         <div className="space-y-4">
@@ -133,8 +126,8 @@ export default function CsvEditor({
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {data.map((row, rIndex) => (
-                                <tr key={rIndex} className="hover:bg-slate-50/80 transition-colors group">
+                            {data.map((row) => (
+                                <tr key={row.id} className="hover:bg-slate-50/80 transition-colors group">
                                     {columns.map(col => {
                                         const isNumeric =
                                             col === 'الرقم' ||
@@ -143,12 +136,12 @@ export default function CsvEditor({
                                             col.toLowerCase().includes('tel');
                                         return (
                                             <td
-                                                key={`${rIndex}-${col}`}
+                                                key={col}
                                                 className="p-2 border-l border-transparent hover:border-slate-200"
                                             >
                                                 <CellInput
                                                     value={row[col] || ''}
-                                                    onCommit={(val) => commitCell(rIndex, col, val)}
+                                                    onCommit={(val) => commitCell(row.id, col, val)}
                                                     isNumeric={isNumeric}
                                                 />
                                             </td>
@@ -156,7 +149,7 @@ export default function CsvEditor({
                                     })}
                                     <td className="p-2 sticky left-0 bg-white group-hover:bg-slate-50">
                                         <button
-                                            onClick={() => deleteRow(rIndex)}
+                                            onClick={() => deleteRow(row.id)}
                                             className="text-slate-300 hover:text-red-500 transition-colors"
                                         >
                                             <Trash2 className="w-4 h-4" />

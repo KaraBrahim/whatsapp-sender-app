@@ -1,11 +1,5 @@
-import React from 'react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../lib/utils';
 
-// Helper for class merging
-export function cn(...inputs) {
-    return twMerge(clsx(inputs));
-}
 
 export const Button = ({ children, variant = 'primary', className, ...props }) => {
     const variants = {

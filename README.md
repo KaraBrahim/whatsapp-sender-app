@@ -1,16 +1,32 @@
-# React + Vite
+# Quick Message Sender (WA Sender)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Arabic, RTL, mobile‑first app for sending **personalised WhatsApp messages** to a list of contacts, one tap at a time. Nothing is sent automatically and all data stays on the device (`localStorage`).
 
-Currently, two official plugins are available:
+Built with React 19, Vite 7 and Tailwind v4. Ships as a **PWA** and as an **Android app** via Capacitor 7.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **جهات الاتصال** — load the phone's address book (Capacitor contacts plugin), search, multi‑select, or add a number manually.
+- **محرر البيانات** — spreadsheet‑style editor: add/rename/delete columns, edit cells, export CSV.
+- **إرسال الرسائل** — write a template with `{الاسم}`‑style variables, then tap "إرسال" per row to open WhatsApp with the filled‑in message. Rows are marked as sent.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Development
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev        # web dev server
+npm run build      # production build to dist/
+npm run lint
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Android
+
+```bash
+npm run build:android   # vite build + cap sync android
+npm run open:android    # open in Android Studio
+```
+
+## Notes
+
+- Phone normalisation is Algeria‑specific: a leading `0` becomes `213…`.
+- App id: `com.quickmsgsender.app`.

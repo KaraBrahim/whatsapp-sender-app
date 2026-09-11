@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Smartphone, MessageSquare, Copy, Trash2, X } from 'lucide-react';
-import { Button, Card, cn } from './ui/BaseComponents';
+import { Button, Card } from './ui/BaseComponents';
+import { cn } from '../lib/utils';
 
 const DEFAULT_MESSAGE = `السلام عليكم {الاسم} 🌹`;
 const MESSAGE_KEY = 'wa_sender_message';
@@ -20,7 +21,7 @@ export default function Sender({ data, columns, setData }) {
     useEffect(() => {
         clearTimeout(saveTimer.current);
         saveTimer.current = setTimeout(() => {
-            try { localStorage.setItem(MESSAGE_KEY, message); } catch {}
+            try { localStorage.setItem(MESSAGE_KEY, message); } catch { /* storage unavailable */ }
         }, 500);
         return () => clearTimeout(saveTimer.current);
     }, [message]);
@@ -40,11 +41,11 @@ export default function Sender({ data, columns, setData }) {
         });
     };
 
-    const handleSend = (index, row) => {
+    const handleSend = (row) => {
         let finalMsg = message;
         columns.forEach(col => {
-            const regex = new RegExp(`\\{${col}\\}`, 'g');
-            finalMsg = finalMsg.replace(regex, row[col] || '');
+            // Plain string replace — column names may contain regex metacharacters
+            finalMsg = finalMsg.split(`{${col}}`).join(row[col] || '');
         });
 
         const rawPhone = row[PHONE_COL];
@@ -65,11 +66,11 @@ export default function Sender({ data, columns, setData }) {
         link.click();
 
         if (!row.sent) {
-            const newData = [...data];
-            newData[index].sent = true;
-            setData(newData);
+            setData(prev => prev.map(r => (r.id === row.id ? { ...r, sent: true } : r)));
         }
     };
+
+    const deleteRow = (id) => setData(prev => prev.filter(r => r.id !== id));
 
     const sentCount = data.filter(d => d.sent).length;
 
@@ -150,14 +151,14 @@ export default function Sender({ data, columns, setData }) {
                 </div>
 
                 <div className="space-y-3">
-                    {data.map((row, index) => {
+                    {data.map((row) => {
                         const displayName = row[NAME_COL] || 'بدون اسم';
                         const displayPhone = row[PHONE_COL] || '---';
                         const initial = displayName.charAt(0).toUpperCase();
 
                         return (
                             <div
-                                key={index}
+                                key={row.id}
                                 className={cn(
                                     "p-3 rounded-xl border-2 transition-all duration-200 flex items-center gap-2",
                                     row.sent ? "bg-emerald-50 border-emerald-200 shadow-sm" : "bg-white border-slate-200"
@@ -165,7 +166,7 @@ export default function Sender({ data, columns, setData }) {
                             >
                                 {/* Delete X */}
                                 <button
-                                    onClick={() => setData(data.filter((_, i) => i !== index))}
+                                    onClick={() => deleteRow(row.id)}
                                     className="text-slate-300 hover:text-red-500 transition-colors shrink-0 p-1"
                                 >
                                     <X className="w-4 h-4" />
@@ -188,7 +189,7 @@ export default function Sender({ data, columns, setData }) {
                                 </div>
 
                                 <Button
-                                    onClick={() => handleSend(index, row)}
+                                    onClick={() => handleSend(row)}
                                     variant={row.sent ? "secondary" : "primary"}
                                     className={cn(
                                         "rounded-full shrink-0 font-bold px-4 py-2 text-sm",

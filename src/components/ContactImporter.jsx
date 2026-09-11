@@ -3,7 +3,8 @@ import {
     Users, UserPlus, CheckCircle2,
     AlertTriangle, Smartphone, Search, X, Plus, Send
 } from 'lucide-react';
-import { Button, Card, cn } from './ui/BaseComponents';
+import { Button, Card } from './ui/BaseComponents';
+import { cn } from '../lib/utils';
 import { Contacts } from '@capacitor-community/contacts';
 
 const STORAGE_KEY = 'wa_phone_contacts';
@@ -16,7 +17,7 @@ function loadSavedContacts() {
 }
 
 function saveContacts(contacts) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts)); } catch {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts)); } catch { /* storage unavailable */ }
 }
 
 export default function ContactImporter({ onAddToList }) {
@@ -88,7 +89,7 @@ export default function ContactImporter({ onAddToList }) {
             setManualError('رقم الهاتف مطلوب');
             return;
         }
-        if (!/^[\d\s\+\-\(\)]+$/.test(phone)) {
+        if (!/^[\d\s+\-()]+$/.test(phone)) {
             setManualError('رقم غير صالح');
             return;
         }
