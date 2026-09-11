@@ -1,0 +1,15 @@
+{
+  "appId": "com.quickmsgsender.app",
+  "appName": "Quick Message Sender",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

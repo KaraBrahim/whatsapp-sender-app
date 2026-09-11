@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="40" fill="#059669"/>
+  <circle cx="96" cy="96" r="58" fill="#ffffff" opacity="0.15"/>
+  <!-- WhatsApp-style speech bubble -->
+  <path d="M96 44 C67.4 44 44 67.4 44 96 C44 105.6 46.6 114.6 51.2 122.4 L44 148 L70.4 141 C78 145.2 86.7 147.6 96 147.6 C124.6 147.6 148 124.2 148 95.6 C148 67 124.6 44 96 44Z" fill="white"/>
+  <!-- Send arrow -->
+  <path d="M72 96 L112 80 L96 116 L90 102 Z" fill="#059669"/>
+  <path d="M90 102 L112 80" stroke="#059669" stroke-width="3" fill="none"/>
+</svg>
